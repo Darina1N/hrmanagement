@@ -4,16 +4,16 @@ import sk.kosickaakademia.company.entity.User;
 import sk.kosickaakademia.company.log.Log;
 
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class Database {
     Log log=new Log();
     private final String InsertQuery ="INSERT INTO user (fname, lname, age, gender) "+
             "VALUES (?, ?, ?, ?)";
+
     public Connection getConnection(){
         try {
             Properties properties=new Properties();
@@ -61,5 +61,44 @@ public class Database {
           }
       }
       return false;
+    }
+
+    public List<User> getMales(){
+        String sqlM="SELECT * FROM user WHERE gender=0";
+        try{
+            PreparedStatement ps=getConnection().prepareStatement(sqlM);
+            return executeSelect(ps);
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        return null;
+    }
+
+    public List<User> getFemales(){
+        String sqlF="SELECT * FROM user WHERE gender=1";
+        try{
+            PreparedStatement ps=getConnection().prepareStatement(sqlF);
+            return executeSelect(ps);
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        return null;
+    }
+
+    private List<User> executeSelect(PreparedStatement ps){
+        List<User> list = new ArrayList<>();
+        try {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String fname = rs.getString("fname");
+                String lname = rs.getString("lname");
+                int age = rs.getInt("age");
+                int gender = rs.getInt("gender");
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return list;
     }
 }
