@@ -24,9 +24,9 @@ public class App
         List<User> list2=database.getAllUsers();
         System.out.println("Všetci: \n"+list2);
         List<User> list3=database.getUserByAge(5,50);
-        System.out.println("Len vybrané vekové rozpätie: \n"+list3);
+        System.out.println("Len vybrané vekové rozpätie: \n"+list3);*/
         List<User> list4=database.getUser("ik");
-        System.out.println("Users podľa výberového patternu: \n"+list4);*/
+        System.out.println("Users podľa výberového patternu: \n"+list4);
         User user =database.getUserById(2);
         System.out.println(user);
 

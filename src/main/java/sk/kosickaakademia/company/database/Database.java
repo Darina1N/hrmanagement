@@ -127,10 +127,10 @@ public class Database {
             PreparedStatement ps=getConnection().prepareStatement(sglId);
             ps.setInt(1,id);
             List<User> list= executeSelect(ps);
-            System.out.println(list);
             if(list.isEmpty())
                 return null;
-            else list.get(0);
+            else
+                return list.get(0);
         }catch (Exception e){
             log.error(e.toString());
         }
@@ -171,7 +171,10 @@ public class Database {
         List<User> list=new ArrayList<>();
         String sqlUser="SELECT * FROM user WHERE fname LIKE ? OR lname LIKE ?";
         try{
-
+            PreparedStatement ps=getConnection().prepareStatement(sqlUser);
+            ps.setString(1,"%"+pattern+"%");
+            ps.setString(2,"%"+pattern+"%");
+            return executeSelect(ps);
         }catch (Exception e){
             log.error(e.toString());
         }
