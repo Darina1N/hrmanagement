@@ -41,6 +41,16 @@ public class User {
     public Gender getGender() {
         return gender;
     }
+    @Override
+    public String toString(){
+      return "User{"+
+                    "id="+id+
+                    ", fname='"+fname+'\''+
+                    ", lname='"+lname+'\''+
+                    ", age="+age+
+                    ", gender="+gender+
+                 "}";
+    }
 }
 
 

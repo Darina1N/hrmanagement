@@ -63,6 +63,25 @@ public class Database {
       return false;
     }
 
+    private List<User> executeSelect(PreparedStatement ps){
+        List<User> list = new ArrayList<>();
+        try {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String fname = rs.getString("fname");
+                String lname = rs.getString("lname");
+                int age = rs.getInt("age");
+                int gender = rs.getInt("gender");
+                User user=new User(id,fname,lname,age,gender);
+                list.add(user);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public List<User> getMales(){
         String sqlM="SELECT * FROM user WHERE gender=0";
         try{
@@ -85,20 +104,77 @@ public class Database {
         return null;
     }
 
-    private List<User> executeSelect(PreparedStatement ps){
-        List<User> list = new ArrayList<>();
-        try {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String fname = rs.getString("fname");
-                String lname = rs.getString("lname");
-                int age = rs.getInt("age");
-                int gender = rs.getInt("gender");
-            }
-        }catch (SQLException e){
-            e.printStackTrace();
+    public List<User> getUserByAge(int from, int to){
+        if(from>to)
+            return null;
+        String sqlAge="SELECT * FROM user WHERE age>=? AND age<=?";
+        try{
+            PreparedStatement ps=getConnection().prepareStatement(sqlAge);
+            ps.setInt(1,from);
+            ps.setInt(2,to);
+            return executeSelect(ps);
+        }catch (Exception e){
+            log.error(e.toString());
         }
-        return list;
+        return null;
+    }
+
+    public User getUserById(int id){
+        if(id <= 0)
+            return null;
+        String sglId="SELECT * FROM user WHERE id=?";
+        try{
+            PreparedStatement ps=getConnection().prepareStatement(sglId);
+            ps.setInt(1,id);
+            List<User> list= executeSelect(ps);
+            System.out.println(list);
+            if(list.isEmpty())
+                return null;
+            else list.get(0);
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        return null;
+    }
+
+    public List<User> getAllUsers(){
+        String sqlAll="SELECT * FROM user";
+        try{
+            PreparedStatement ps=getConnection().prepareStatement(sqlAll);
+            return executeSelect(ps);
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        return null;
+    }
+
+    public boolean changeAge(int id, int newAge){
+        if(newAge<=0 || newAge>99)
+            return false;
+        String sqlNewAge="UPDATE user SET age=? WHERE id=?";
+        try{
+            PreparedStatement ps=getConnection().prepareStatement(sqlNewAge);
+            ps.setInt(1,newAge);
+            ps.setInt(2,id);
+            int result=ps.executeUpdate();
+            if(result==1)
+                return true;
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        return false;
+    }
+
+    public List<User> getUser(String pattern){//metoda ktorá príjíma pattern, čiže podreťazec a potom prehľadáva komplet celé meno
+        // "mi" -> Miro, Mila, Jarmila, Kominar
+        // select    ....where fname like '%?%' OR lname like '%?%'*/
+        List<User> list=new ArrayList<>();
+        String sqlUser="SELECT * FROM user WHERE fname LIKE ? OR lname LIKE ?";
+        try{
+
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        return null;
     }
 }
