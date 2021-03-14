@@ -4,10 +4,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sk.kosickaakademia.company.database.Database;
 import sk.kosickaakademia.company.entity.User;
 import sk.kosickaakademia.company.enumerator.Gender;
@@ -59,5 +56,16 @@ public class Controller {
         String json=new Util().getJSON(list);
         return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
         //kedze mi vracia json tak mi vrati aj prazdny a teda nepotrebujem robit 400
+    }
+
+    @GetMapping("/user/age")
+    public ResponseEntity<String> getAgeFromTo(@RequestParam(value = "from")int value1, @RequestParam(value = "to")int value2){
+        List<User> list=new Database().getUserByAge(value1,value2);
+
+        if(value1 < 1 || value2 < 1){
+            return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON).body("Chybne zadané vstupy");
+        }
+        String json=new Util().getJSON(list);
+        return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
     }
 }
