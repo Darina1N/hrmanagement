@@ -2,6 +2,7 @@ package sk.kosickaakademia.company.util;
 
 import sk.kosickaakademia.company.entity.User;
 import org.json.simple.*;
+import sk.kosickaakademia.company.enumerator.Gender;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -53,7 +54,6 @@ public class Util {
             return formatDateTime;
         }
 
-
     public String upravaName(String name){//metoda ktora mi upravi meno aby bolo jednotne zapisane v db MILAN->Milan
         if(name.isEmpty())
             return null;
@@ -62,5 +62,35 @@ public class Util {
         newName=""+name.toUpperCase().charAt(0);
         String substring=name.substring(1,name.length()).toLowerCase();
         return (newName+substring);
+    }
+
+    public String getOverview(List<User> list) {
+        int count= list.size();
+        int countMale=0;
+        int countFemale=0;
+        int sumAge=0;
+        double averageAge=0.0;
+        int minAge= count>0? list.get(0).getAge():0; //ternary operator - ak počet je>0 tak daj mi vek na danej pozicii ak nie tak 0
+        int maxAge= count>0? list.get(0).getAge():0;
+        for(User user : list){
+            if(user.getGender()== Gender.Male)
+                countMale++;
+            if(user.getGender()==Gender.Female)
+                countFemale++;
+            sumAge+=user.getAge();
+            if(minAge>user.getAge())
+                minAge=user.getAge();
+            if(maxAge<user.getAge())
+                maxAge=user.getAge();
+            averageAge=(double)sumAge/count;
+        }
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("count",count);
+        jsonObject.put("countMale",countMale);
+        jsonObject.put("countFemale",countFemale);
+        jsonObject.put("minAge",minAge);
+        jsonObject.put("maxAge",maxAge);
+        jsonObject.put("averageAge",averageAge);
+        return jsonObject.toJSONString();
     }
 }

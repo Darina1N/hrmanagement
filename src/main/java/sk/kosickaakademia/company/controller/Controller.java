@@ -89,4 +89,11 @@ public class Controller {
             return ResponseEntity.status(404).contentType(MediaType.APPLICATION_JSON).body("User not found");
         }
     }
+
+    @GetMapping("/")
+    public ResponseEntity<String> overview(){
+        List<User> list=new Database().getAllUsers();
+        String jsonOverview=new Util().getOverview(list);
+        return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(jsonOverview.toString());
+    }
 }
