@@ -7,6 +7,7 @@ import sk.kosickaakademia.company.enumerator.Gender;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Random;
 
 public class Util {
     public String getJSON(List<User> list){//na vstupe bude zoznam userov a vráti mi json, ale tak že user bude ako pole
@@ -92,5 +93,19 @@ public class Util {
         jsonObject.put("maxAge",maxAge);
         jsonObject.put("averageAge",averageAge);
         return jsonObject.toJSONString();
+    }
+
+    public String generateToken(){//metoda na generovanie tokenu - 40 znakov-velke a male pismena a cisla
+        String token="";
+        Random random=new Random();
+        for(int i=0;i<40;i++){
+            int znak=random.nextInt(3);
+            switch (znak){
+                case 0: token=token+(char)(random.nextInt(26)+65); break;//veľké pismena
+                case 1: token=token+(char)(random.nextInt(26)+97); break;//malé písmená
+                case 2: token=token+(char)(random.nextInt(10)+48); break;//čísla
+            }
+        }
+        return token;
     }
 }
