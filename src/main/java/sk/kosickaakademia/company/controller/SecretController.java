@@ -19,15 +19,15 @@ public class SecretController {
     Log log = new Log();
 
     @GetMapping("/secret")
-    public String secret(@RequestHeader("token") String header){
+    public ResponseEntity<String> secret(@RequestHeader("token") String header){
         System.out.println(header);
-        String token= header.substring(7);//token az od 7 znaku
+        String token= header.substring(7);//token ako taký je az od 7 znaku
         for(Map.Entry<String, String> entry: map.entrySet()){
             if(entry.getValue().equals(token)){
-                return "secret";
+                return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body("secret");
             }
         }
-        return "401 - Unauthorized";
+        return ResponseEntity.status(404).body("");
     }
 
     @PostMapping("/login")
@@ -57,5 +57,27 @@ public class SecretController {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("token") String header){
+        String token=header.substring(7);
+        String login=null;
+        for (Map.Entry<String, String> entry : map.entrySet()){
+            if(entry.getValue().equalsIgnoreCase(token)){
+                login=entry.getKey();
+                break;
+            }
+        }
+        int status;
+        if(login!=null){
+            map.remove(login);
+            log.info("Logout user: "+login);
+            status=204;
+        }else {
+            log.error("Logout failed. User "+login+"does not exist.");
+            status=404;
+        }
+        return ResponseEntity.status(201).contentType(MediaType.APPLICATION_JSON).body("");
     }
 }
