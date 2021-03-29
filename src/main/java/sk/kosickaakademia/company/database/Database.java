@@ -1,7 +1,13 @@
 package sk.kosickaakademia.company.database;
 
+import com.mongodb.DB;
+import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
+import org.json.simple.JSONObject;
 import sk.kosickaakademia.company.entity.User;
 import sk.kosickaakademia.company.log.Log;
+
 
 import java.io.InputStream;
 import java.sql.*;
@@ -13,6 +19,10 @@ public class Database {
     Log log=new Log();
     private final String InsertQuery ="INSERT INTO user (fname, lname, age, gender) "+
             "VALUES (?, ?, ?, ?)";
+
+    MongoClient mongoClient = new MongoClient("localhost", 27017);
+    MongoDatabase database = mongoClient.getDatabase("myMongoDb");
+
 
     public Connection getConnection(){
         try {
@@ -180,4 +190,5 @@ public class Database {
         }
         return null;
     }
+
 }

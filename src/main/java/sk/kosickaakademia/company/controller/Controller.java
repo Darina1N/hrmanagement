@@ -1,5 +1,6 @@
 package sk.kosickaakademia.company.controller;
 
+import com.fasterxml.jackson.databind.JsonSerializer;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -11,8 +12,11 @@ import sk.kosickaakademia.company.entity.User;
 import sk.kosickaakademia.company.enumerator.Gender;
 import sk.kosickaakademia.company.log.Log;
 import sk.kosickaakademia.company.util.Util;
+import sk.kosickaakademia.company.util.XML;
 
 import java.util.List;
+
+import static com.mysql.cj.x.protobuf.MysqlxResultset.ContentType_BYTES.XML;
 
 @RestController
 public class Controller {
@@ -57,6 +61,14 @@ public class Controller {
         String json = new Util().getJSON(list);
         return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(json);
         //kedze mi vracia json tak mi vrati aj prazdny a teda nepotrebujem robit 400
+    }
+
+    @GetMapping(value="/users",params = "/type")
+    public ResponseEntity<String> getAllUsersXML(){
+        List<User> list = new Database().getAllUsers();
+        String jsonValue = new Util().getJSON(list);
+        String xml= new XML().FromJsonToXML(jsonValue);
+        return ResponseEntity.status(200).contentType(MediaType.APPLICATION_XML).body(xml);
     }
 
     @GetMapping("/user/age")

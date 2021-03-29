@@ -13,6 +13,7 @@ public class App
 {
     public static void main( String[] args )
     {
+        System.out.println(args[0]);
         SpringApplication.run(App.class,args);
         /*
         Database database=new Database();
@@ -29,6 +30,7 @@ public class App
         System.out.println("Users podľa výberového patternu: \n"+list4);
         User user =database.getUserById(2);
         System.out.println(user);*/
+
 
     }
 }
