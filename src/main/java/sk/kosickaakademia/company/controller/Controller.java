@@ -63,7 +63,7 @@ public class Controller {
         //kedze mi vracia json tak mi vrati aj prazdny a teda nepotrebujem robit 400
     }
 
-    @GetMapping(value="/users",params = "/type")
+    @GetMapping(value="/usersxml",params = "type")
     public ResponseEntity<String> getAllUsersXML(){
         List<User> list = new Database().getAllUsers();
         String jsonValue = new Util().getJSON(list);

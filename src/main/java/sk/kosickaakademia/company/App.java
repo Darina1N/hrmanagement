@@ -4,6 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import sk.kosickaakademia.company.database.Database;
 import sk.kosickaakademia.company.entity.User;
+import sk.kosickaakademia.company.util.Util;
+import sk.kosickaakademia.company.util.XML;
 
 import java.util.List;
 
@@ -30,7 +32,11 @@ public class App
         System.out.println("Users podľa výberového patternu: \n"+list4);
         User user =database.getUserById(2);
         System.out.println(user);*/
+        Util util = new Util();
+        Database database = new Database();
+        XML xml = new XML();
 
+        System.out.println(xml.FromJsonToXML(util.getJSON(database.getAllUsers())));
 
     }
 }
